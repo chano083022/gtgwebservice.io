@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GTG</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}"> 
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <script src="https://kit.fontawesome.com/183ac1236e.js" crossorigin="anonymous"></script>
+    
+</head>
+<body>
+    <header class="header">
+        <a href="#" class="logo">
+            <div class="logo">
+                <img src="logo-com.png" alt="Logo">
+                <span class="logo-text">GetTogetherGo</span>
+            </div>
+        </a>
+        <nav class="navbar">
+            <a href="#">upcoming <i class="fa-regular fa-circle-dot fa-fade" style="color: #29B60B;"></i></a>
+            <a href="#">notification <i class="fa-regular fa-bell fa-shake" style="color: #29B60B;"></i></a>
+            <a href="#"><i class="fa-regular fa-user fa-xl"></i></a>
+        </nav>
+    </header>
+
+    <div id="first-page">
+        <div align="center">
+            <h1 id="lost-item-text" style="height: 50px; overflow: hidden;">
+                <span class="typing-text">
+                    <span class="green-text">Where</span> Every Event Starts, <span class="green-text">GetTogetherGo!</span>
+                </span>
+            </h1>
+           
+        </div>
+    </div>
+        
+    
+        
+        <div class="content">
+            <div id="persons-table" class="table-section">
+               
+                <form id="refresh-form" action="/refresh" method="get">
+                    <button type="submit">Refresh</button>
+                </form>
+
+                <table class="user-table">
+                    <tr class="table-row">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Age</th>
+                        <th>Location</th>
+                        <th>Phone</th>
+                        <th>Category</th>
+                        <th>Location Event</th>
+                        
+                    </tr>
+                 
+                    {% for person in persons %}
+                    <tr >
+                        <td>{{ person.id }}</td>
+                        <td>{{ person.name }}</td>
+                        <td>{{ person.age }}</td>
+                        <td>{{ person.location }}</td>
+                        <td>{{ person.phone }}</td>
+                        <td>{{ person.category }}</td>
+                        <td>{{ person.location_event }}</td>
+                        
+                    </tr>
+                    {% endfor %}
+                </table>
+            </div>
+            
+            
+                <div class="actions-section">
+                    <div class="action-container">
+                        <div id="add-person" class="action-section">
+                            <p class="circle-button" onclick="toggleAddSection()">post</p>
+                            <p class = add_sentence>Let's get together and make it happen!</p>
+                            
+                            <form id="add-form" action="/add" method="post" style="display: none;">
+                                <input type="text" name="name" placeholder="Name" required><br>
+                                <input type="number" name="age" placeholder="Age" required><br>
+                                <input type="text" name="location" placeholder="Location" required><br>
+                                <input type="number"  name="phone" placeholder="Phone" required><br>
+                                
+                                <select name="category" id="category" required class="input-field">
+                                    <optgroup label="Party">
+                                        <option value="school party">School Party</option>
+                                        <option value="birthday party">Birthday Party</option>
+                                    </optgroup>
+                                    <optgroup label="Sports">
+                                        <option value="badminton">Badminton</option>
+                                        <option value="volleyball">Volleyball</option>
+                                        <option value="basketball">Basketball</option>
+                                    </optgroup>
+                                    <optgroup label="Officials">
+                                        <option value="city event">City Event</option>
+                                        <option value="band event">Band Event</option>
+                                    </optgroup>
+                                    <optgroup label="Donation">
+                                        <option value="food donation event">Food Donation Event</option>
+                                        <option value="clothes donation event">Clothes Donation Event</option>
+                                        <option value="charity event">Charity Event</option>
+                                    </optgroup>
+                                </select>
+                                
+                                <input type="text" name="location_event" placeholder="Location Event" required><br>
+                                <button type="submit">Enter</button>
+                            </form>
+                        </div>
+                        
+            
+                        <div id="search-person" class="action-section">
+                            <p class="circle-button" onclick="toggleSearchSection()">search</p>
+                            <p class="search_sentence">Stay in the loop with what's new and exciting.</p>
+                            <form id="search-form" action="/search" method="get" style="display: none;">
+                                <input type="text" name="search_id" placeholder="Search ID" required>
+                                <button type="submit">Enter</button>
+                            </form>
+                        </div>
+            
+                        <div id="update-person" class="action-section">
+                            <p class="circle-button" onclick="toggleUpdateSection()">update</p>
+                            <p class="update_sentence"> Update your event details to ensure everyone stays updated about your plans.</p>
+                            <form id="update-form" method="PATCH" style="display: none;">
+                           
+                                <input type="text" name="id" placeholder="ID" required><br>
+                                <input type="text" name="name" placeholder="Name" required><br>
+                                <input type="number" name="age" placeholder="Age" required><br>
+                                <input type="text" name="location" placeholder="Location" required><br>
+                                <input type="number" name="phone" placeholder="Phone" required><br>
+                                <select name="category" id="category" required class="input-field">
+                                    <optgroup label="Party">
+                                        <option value="school party">School Party</option>
+                                        <option value="birthday party">Birthday Party</option>
+                                    </optgroup>
+                                    <optgroup label="Sports">
+                                        <option value="badminton">Badminton</option>
+                                        <option value="volleyball">Volleyball</option>
+                                        <option value="basketball">Basketball</option>
+                                    </optgroup>
+                                    <optgroup label="Officials">
+                                        <option value="city event">City Event</option>
+                                        <option value="band event">Band Event</option>
+                                    </optgroup>
+                                    <optgroup label="Donation">
+                                        <option value="food donation event">Food Donation Event</option>
+                                        <option value="clothes donation event">Clothes Donation Event</option>
+                                        <option value="charity event">Charity Event</option>
+                                    </optgroup>
+                                </select>
+                                <input type="text" name="location_event" placeholder="Location Event" required><br>
+                                <button type="submit" onclick="updatePerson()">Enter</button>
+                            </form>
+                        </div>
+            
+                        <div id="delete-person" class="action-section">
+                            <p class="circle-button" onclick="toggleDeleteSection()">delete</p>
+                            <p class ="delete_sentence">Delete to keep things organized and up to date.</p>
+                            
+                            <form id="delete-form" method="DELETE" style="display: none;">
+                                <input type="text" name="delete" placeholder="ID to delete" required><br>
+                                <button type="submit" onclick="deletePerson()">Delete</button>
+                            </form>
+                            <form id="delete-all-form" style="display: none;" onsubmit="event.preventDefault(); deleteAllPersons()">
+                                <button type="submit">Delete All</button>
+                            </form>
+                        
+                        </div>
+                    </div>
+                </div>
+
+
+                
+    <script src="{{ url_for('static', filename='fetch.js') }}"></script>
+    <script src="{{ url_for('static', filename='animation.js') }}"></script>
+
+    
+</body>
+</html>

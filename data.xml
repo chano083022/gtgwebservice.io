@@ -1,0 +1,11 @@
+<root>
+	<person>
+		<id>1</id>
+		<name>323</name>
+		<age>3</age>
+		<location>3</location>
+		<phone>3</phone>
+		<category>school party</category>
+		<location_event>3</location_event>
+	</person>
+</root>

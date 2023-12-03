@@ -1,0 +1,296 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Poppins', sans-serif;
+}
+
+.highlight {
+  background-color: #FFFF00; 
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: #ededed;
+  color: black;
+}
+
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  padding: 0 8%;
+  background: whitesmoke;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  z-index: 100;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.logo img {
+  width: 60px;
+  height: 60px;
+  margin-right: 10px; 
+}
+
+.logo-text {
+  font-size: 24px; 
+  font-weight: bold; 
+  color: #29B60B; 
+}
+
+.navbar a {
+  font-size: 18px;
+  color: #808080;
+  text-decoration: none;
+  font-weight: 500;
+  margin-left: 35px;
+  transition: 0.3s;
+}
+
+.navbar a:hover,
+.navbar a.active {
+  color: #29B60B;
+}
+
+.navbar a.active {
+  color: #29B60B;
+}
+
+#lost-item-text {
+  text-align: center;
+  font-size: 40px;
+  margin-top: 80px;
+  font-weight: bold;
+  color: grey;
+}
+
+.content-box {
+  text-align: center;
+  margin-top: 20px;
+}
+
+.content-box img {
+  max-width: 100%;
+  height: auto;
+}
+
+.content {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+  width: 100%;
+  height: 100vh;
+  background-color: #ededed;
+  padding: 20px;
+  margin-top: 20px;
+  margin-right: 20px;
+}
+
+.green-text {
+  color: #29B60B;
+  font-weight: bold;
+}
+
+.action-container {
+  display: flex;
+  justify-content: space-between;
+}
+
+.action-section {
+  width: 22%; 
+
+}
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+input[type="number"] {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  display: inline-block;
+  border: 1px solid #ccc; 
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+input[type="tel"] {
+  width: 100%;
+  padding: 8px;
+  margin: 6px 0;
+  display: inline-block;
+  border: 1px solid #ccc; 
+  border-radius: 4px;
+  box-sizing: border-box;
+}
+
+
+button[type="submit"] {
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.circle-button {
+  background-color: #29B60B;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  width: 100px; 
+  border-radius: 20px; 
+  text-align: center;
+ 
+}
+
+.circle-button:hover {
+  background-color: #1f7f1f; 
+}
+.action-container {
+  display: flex;
+  justify-content: space-around;
+  align-items: flex-start;
+}
+
+.action-section {
+  width: 22%; 
+  
+ 
+  margin-top: 70px;
+  margin-left: 30px;
+  text-align: center;
+  height: 150px; 
+}
+
+.active {
+  position: absolute;
+}
+
+
+
+
+.user-table {
+  margin-left: 20px; 
+}
+
+
+
+#refresh-form {
+  display: flex;
+  justify-content: flex-end;
+  margin-right: 5px; 
+}
+
+#refresh-form button {
+  
+  background-color: #4CAF50;
+  color: white;
+  padding: 10px 20px;
+  margin: 8px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+
+
+.input-field {
+
+  width: 100%;
+  padding: 8px;
+  margin: 5px 0;
+  display: inline-block;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 11px;
+}
+
+
+.user-table {
+  border-collapse: collapse;
+  margin: 25px 0;
+  font-size: 0.9em;
+  font-family: sans-serif;
+  min-width: 400px;
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.15);
+  border-radius: 10px;
+}
+
+.user-table th,
+.user-table td {
+  padding: 12px 15px;
+}
+
+.user-table tbody tr {
+  border-bottom: 1px solid #dddddd;
+}
+
+.user-table tbody tr:nth-of-type(even) {
+  background-color: #f3f3f3;
+}
+
+.user-table tbody tr:last-of-type {
+  border-bottom: 2px solid #009879;
+  
+}
+
+.user-table tbody tr.active-row {
+  font-weight: bold;
+  color: #009879;
+}
+
+
+.user-table th {
+  color: #29B60B;
+}
+
+
+    .add_sentence,
+    .search_sentence,
+    .update_sentence,
+    .delete_sentence {
+        font-style: italic;
+        color: #555; 
+        transition: all 0.3s ease; 
+        opacity: 0.4; 
+    
+       
+        font-size: 16px;
+        margin-top: 15px; 
+    }
+    
+   
+    .add_sentence:hover,
+    .search_sentence:hover,
+    .update_sentence:hover,
+    .delete_sentence:hover {
+        color: #ff6600; 
+        transform: scale(1.1); 
+        opacity: 10; 
+    }
+
+    
