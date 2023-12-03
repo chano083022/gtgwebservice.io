@@ -2,17 +2,22 @@ from flask import Flask, render_template, request, redirect
 import xml.etree.ElementTree as ET
 import os
 from xml.dom import minidom
+import logging
 
 app = Flask(__name__)
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 XML_FILE = os.path.join(BASE_DIR, "data.xml")
 
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+
 def load_data():
     try:
         tree = ET.parse(XML_FILE)
         root = tree.getroot()
-    except ET.ParseError:
+    except ET.ParseError as e:
+        logging.error(f"Error parsing XML file: {e}")
         # Create a new root element if the file is empty
         root = ET.Element("root")
         tree = ET.ElementTree(root)
@@ -25,6 +30,17 @@ def generate_unique_id(existing_ids):
     else:
         return max(existing_ids) + 1
 
+def extract_person_data(person):
+    return {
+        'id': person.findtext('id', default=''),
+        'name': person.findtext('name', default=''),
+        'age': person.findtext('age', default=''),
+        'location': person.findtext('location', default=''),
+        'phone': person.findtext('phone', default=''),
+        'category': person.findtext('category', default=''),
+        'location_event': person.findtext('location_event', default='')
+    }
+
 def prettify(elem, depth=0):
     if len(elem):
         elem.text = '\n' + '\t' * (depth + 1)
@@ -36,18 +52,7 @@ def prettify(elem, depth=0):
 @app.route('/')
 def index():
     root = load_data()
-    data = []
-    for person in root.findall('person'):
-        person_data = {
-            'id': person.find('id').text if person.find('id') is not None else '',
-            'name': person.find('name').text if person.find('name') is not None else '',
-            'age': person.find('age').text if person.find('age') is not None else '',
-            'location': person.find('location').text if person.find('location') is not None else '',
-            'phone': person.find('phone').text if person.find('phone') is not None else '',
-            'category': person.find('category').text if person.find('category') is not None else '',
-            'location_event': person.find('location_event').text if person.find('location_event') is not None else ''
-        }
-        data.append(person_data)
+    data = [extract_person_data(person) for person in root.findall('person')]
     return render_template('index.html', persons=data)
 
 @app.route('/add', methods=['POST'])
@@ -62,7 +67,7 @@ def add():
     tree = ET.parse(XML_FILE)
     root = tree.getroot()
 
-    existing_ids = {int(person.find('id').text) for person in root.findall('person') if person.find('id') is not None}
+    existing_ids = [int(person.findtext('id', default='')) for person in root.findall('person')]
 
     new_id = generate_unique_id(existing_ids)
 
@@ -91,16 +96,8 @@ def search():
 
     # Search for a specific user
     for person in root.findall('person'):
-        if person.find('id').text == search_term:
-            person_data = {
-                'id': person.find('id').text if person.find('id') is not None else '',
-                'name': person.find('name').text if person.find('name') is not None else '',
-                'age': person.find('age').text if person.find('age') is not None else '',
-                'location': person.find('location').text if person.find('location') is not None else '',
-                'phone': person.find('phone').text if person.find('phone') is not None else '',
-                'category': person.find('category').text if person.find('category') is not None else '',
-                'location_event': person.find('location_event').text if person.find('location_event') is not None else ''
-            }
+        if person.findtext('id', default='') == search_term:
+            person_data = extract_person_data(person)
             data.append(person_data)
 
     return render_template('index.html', persons=data)
@@ -153,36 +150,19 @@ def delete(person_id):
 @app.route('/refresh', methods=['GET'])
 def refresh():
     root = load_data()
-    data = []
-    for person in root.findall('person'):
-        person_data = {
-            'id': person.find('id').text if person.find('id') is not None else '',
-            'name': person.find('name').text if person.find('name') is not None else '',
-            'age': person.find('age').text if person.find('age') is not None else '',
-            'location': person.find('location').text if person.find('location') is not None else '',
-            'phone': person.find('phone').text if person.find('phone') is not None else '',
-            'category': person.find('category').text if person.find('category') is not None else '',
-            'location_event': person.find('location_event').text if person.find('location_event') is not None else ''
-        }
-        data.append(person_data)
-    
+    data = [extract_person_data(person) for person in root.findall('person')]
     return render_template('index.html', persons=data)
-
 
 @app.route('/delete-all', methods=['DELETE'])
 def delete_all():
     tree = ET.parse(XML_FILE)
     root = tree.getroot()
     
-   
     for person in root.findall('person'):
         root.remove(person)
 
-  
     tree.write(XML_FILE)
     return redirect('/')
-
-
 
 if __name__ == '__main__':
     app.run(debug=True)
