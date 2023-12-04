@@ -1,17 +1,20 @@
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, jsonify
+from flask_cors import CORS
 import xml.etree.ElementTree as ET
 import os
-from xml.dom import minidom
 import logging
 
 app = Flask(__name__)
+CORS(app)
 
+# Define the base directory and XML file path
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 XML_FILE = os.path.join(BASE_DIR, "data.xml")
 
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
+# Function to load data from XML file
 def load_data():
     try:
         tree = ET.parse(XML_FILE)
@@ -24,12 +27,14 @@ def load_data():
         tree.write(XML_FILE)
     return root
 
+# Function to generate a unique ID for a new person
 def generate_unique_id(existing_ids):
     if not existing_ids:
         return 1
     else:
         return max(existing_ids) + 1
 
+# Function to extract person data from XML element
 def extract_person_data(person):
     return {
         'id': person.findtext('id', default=''),
@@ -41,6 +46,7 @@ def extract_person_data(person):
         'location_event': person.findtext('location_event', default='')
     }
 
+# Function to prettify XML for better readability
 def prettify(elem, depth=0):
     if len(elem):
         elem.text = '\n' + '\t' * (depth + 1)
@@ -49,12 +55,21 @@ def prettify(elem, depth=0):
         sub_elem.tail = sub_elem.tail[:-1]
     elem.tail = '\n' + '\t' * depth
 
+# Route to display the main page with all persons
 @app.route('/')
 def index():
     root = load_data()
     data = [extract_person_data(person) for person in root.findall('person')]
     return render_template('index.html', persons=data)
 
+# Route to handle API request for all persons
+@app.route('/api/data', methods=['GET'])
+def get_data_api():
+    root = load_data()
+    data = [extract_person_data(person) for person in root.findall('person')]
+    return jsonify(data)
+
+# Route to add a new person
 @app.route('/add', methods=['POST'])
 def add():
     name = request.form['name']
@@ -87,6 +102,7 @@ def add():
 
     return redirect('/')
 
+# Route to search for a person by ID
 @app.route('/search', methods=['GET'])
 def search():
     search_term = request.args.get('search_id')
@@ -102,6 +118,7 @@ def search():
 
     return render_template('index.html', persons=data)
 
+# Route to update a person by ID
 @app.route('/update/<int:person_id>', methods=['PATCH', 'POST'])
 def update(person_id):
     if request.method == 'PATCH':
@@ -132,6 +149,7 @@ def update(person_id):
     else:
         return "Method Not Allowed", 405
 
+# Route to delete a person by ID
 @app.route('/delete/<int:person_id>', methods=['DELETE'])
 def delete(person_id):
     root = load_data()
@@ -147,12 +165,14 @@ def delete(person_id):
 
     return redirect('/')
 
+# Route to refresh and display all persons
 @app.route('/refresh', methods=['GET'])
 def refresh():
     root = load_data()
     data = [extract_person_data(person) for person in root.findall('person')]
     return render_template('index.html', persons=data)
 
+# Route to delete all persons
 @app.route('/delete-all', methods=['DELETE'])
 def delete_all():
     tree = ET.parse(XML_FILE)
@@ -164,7 +184,9 @@ def delete_all():
     tree.write(XML_FILE)
     return redirect('/')
 
+# Run the app
 if __name__ == '__main__':
     # Explicitly set the PORT environment variable
     port = int(os.environ.get("PORT", 5000))
     app.run(host='0.0.0.0', port=port, debug=True)
+
