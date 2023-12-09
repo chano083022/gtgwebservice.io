@@ -102,25 +102,20 @@ def add():
 
     return redirect('/')
 
-# Route to search for persons by a single search parameter
 @app.route('/search', methods=['GET'])
 def search():
-    search_term = request.args.get('search_term')
+    search_term = request.args.get('search_id')
     root = load_data()
 
     data = []
 
-    # Search for persons matching the search term
+    # Search for a specific user
     for person in root.findall('person'):
-        name_match = person.findtext('name', default='').lower().startswith(search_term.lower())
-        category_match = person.findtext('category', default='') and person.findtext('category', default='').lower().startswith(search_term.lower())
-        location_event_match = person.findtext('location_event', default='') and person.findtext('location_event', default='').lower().startswith(search_term.lower())
-
-        if name_match or category_match or location_event_match:
+        if person.findtext('id', default='') == search_term:
             person_data = extract_person_data(person)
             data.append(person_data)
 
-    return jsonify(data)
+    return render_template('index.html', persons=data)
 
 
 
