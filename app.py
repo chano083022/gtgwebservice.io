@@ -102,13 +102,10 @@ def add():
 
     return redirect('/')
 
-# Route to search for a person by ID
-# Route to search for persons by category, location event, and name
+# Route to search for persons by a single search parameter
 @app.route('/search', methods=['GET'])
 def search():
-    search_category = request.args.get('search_category')
-    search_location_event = request.args.get('search_location_event')
-    search_name = request.args.get('search_name')
+    search_term = request.args.get('search_term')
 
     root = load_data()
 
@@ -116,15 +113,16 @@ def search():
 
     # Search for persons based on category, location event, and name
     for person in root.findall('person'):
-        category_match = person.findtext('category', default='').lower().startswith(search_category.lower()) if search_category else True
-        location_event_match = person.findtext('location_event', default='').lower().startswith(search_location_event.lower()) if search_location_event else True
-        name_match = person.findtext('name', default='').lower().startswith(search_name.lower()) if search_name else True
+        category_match = person.findtext('category', default='').lower().startswith(search_term.lower())
+        location_event_match = person.findtext('location_event', default='').lower().startswith(search_term.lower())
+        name_match = person.findtext('name', default='').lower().startswith(search_term.lower())
 
-        if category_match and location_event_match and name_match:
+        if category_match or location_event_match or name_match:
             person_data = extract_person_data(person)
             data.append(person_data)
 
     return render_template('index.html', persons=data)
+
 
 
 # Route to update a person by ID
