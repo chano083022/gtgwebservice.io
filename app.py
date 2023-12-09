@@ -103,20 +103,29 @@ def add():
     return redirect('/')
 
 # Route to search for a person by ID
+# Route to search for persons by category, location event, and name
 @app.route('/search', methods=['GET'])
 def search():
-    search_term = request.args.get('search_id')
+    search_category = request.args.get('search_category')
+    search_location_event = request.args.get('search_location_event')
+    search_name = request.args.get('search_name')
+
     root = load_data()
 
     data = []
 
-    # Search for a specific user
+    # Search for persons based on category, location event, and name
     for person in root.findall('person'):
-        if person.findtext('id', default='') == search_term:
+        category_match = person.findtext('category', default='').lower().startswith(search_category.lower()) if search_category else True
+        location_event_match = person.findtext('location_event', default='').lower().startswith(search_location_event.lower()) if search_location_event else True
+        name_match = person.findtext('name', default='').lower().startswith(search_name.lower()) if search_name else True
+
+        if category_match and location_event_match and name_match:
             person_data = extract_person_data(person)
             data.append(person_data)
 
     return render_template('index.html', persons=data)
+
 
 # Route to update a person by ID
 @app.route('/update/<int:person_id>', methods=['PATCH', 'POST'])
