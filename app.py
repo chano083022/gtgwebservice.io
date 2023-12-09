@@ -11,6 +11,8 @@ CORS(app)
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 XML_FILE = os.path.join(BASE_DIR, "data.xml")
 
+print("Current working directory:", os.getcwd())
+
 # Set up logging
 logging.basicConfig(level=logging.DEBUG)
 
